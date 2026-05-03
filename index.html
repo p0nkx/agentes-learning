@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenCode - Tu Asistente de Código AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .code-block {
+            background: #0d1117;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+        .step-connector {
+            position: absolute;
+            left: 1.25rem;
+            top: 3rem;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #14b8a6, transparent);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-gray-200">
+
+    <!-- Hero Section -->
+    <header class="container mx-auto px-6 py-16 text-center">
+        <div class="inline-flex items-center gap-2 bg-brand-900/50 border border-brand-700 rounded-full px-4 py-2 mb-8">
+            <span class="w-2 h-2 bg-brand-400 rounded-full animate-pulse"></span>
+            <span class="text-sm font-medium text-brand-300">OpenCode AI Agent</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 bg-gradient-to-r from-brand-300 via-brand-400 to-cyan-400 bg-clip-text text-transparent">
+            Tu Asistente de Código
+        </h1>
+        <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-4">
+            Un agente de código AI de código abierto que te ayuda a escribir, editar y gestionar tu código directamente desde la terminal, IDE o aplicación de escritorio.
+        </p>
+        <p class="text-gray-500 text-sm">
+            Mas de 140,000 estrellas en GitHub - 6.5M+ desarrolladores activos
+        </p>
+    </header>
+
+    <!-- Comandos Section -->
+    <section class="container mx-auto px-6 py-16">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-4 text-white">Todos los Comandos de OpenCode</h2>
+            <p class="text-gray-400 text-center mb-12">Guia completa de comandos integrados, atajos de teclado y herramientas disponibles.</p>
+
+            <!-- Como ejecutar comandos -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 mb-10">
+                <h3 class="text-lg font-semibold text-white mb-3">Como ejecutar comandos</h3>
+                <p class="text-sm text-gray-400 mb-3">Dentro de la interfaz de OpenCode (TUI), escribe <code class="bg-slate-700 px-2 py-0.5 rounded text-brand-300">/</code> seguido del nombre del comando. Tambien puedes usar atajos de teclado con <code class="bg-slate-700 px-2 py-0.5 rounded text-brand-300">ctrl+x</code> como tecla líder (leader key).</p>
+                <div class="code-block p-4 text-sm text-green-400 overflow-x-auto">
+                    <p class="text-gray-500 mb-1"># Ejemplo: escribe dentro de OpenCode</p>
+                    <p>/help</p>
+                    <p class="text-gray-500 mt-3 mb-1"># O usa el atajo:</p>
+                    <p>ctrl+x h (si esta configurado)</p>
+                </div>
+            </div>
+
+            <!-- Comandos de Configuracion y Modelos -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 text-sm">C</span>
+                    Configuracion y Modelos
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/connect</code>
+                            <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">ctrl+x c</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Agrega un proveedor de modelos. Te permite seleccionar entre los proveedores disponibles y agregar sus API keys. Para empezar gratis, selecciona "opencode" (Zen).</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/models</code>
+                            <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">ctrl+x m</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Lista los modelos disponibles. Puedes cambiar de modelo en cualquier momento durante la sesion.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/themes</code>
+                            <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">ctrl+x t</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Lista los temas visuales disponibles. Cambia la apariencia de la interfaz de terminal.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 md:col-span-2">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">skill (herramienta interna)</code>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-3"><strong class="text-white">Agent Skills - NO es un comando de usuario:</strong> Las skills no se ejecutan con <code class="bg-slate-700 px-1 rounded text-xs">/skills</code>. Son comportamientos reutilizables definidos en archivos <code class="bg-slate-700 px-1 rounded text-xs">SKILL.md</code> que los agentes cargan automaticamente bajo demanda.</p>
+                        <div class="bg-slate-900/50 rounded-lg p-4 text-sm">
+                            <p class="text-gray-300 mb-2 font-semibold">Como ver las skills disponibles:</p>
+                            <ul class="space-y-1 text-gray-400">
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">1.</span> En terminal, fuera de OpenCode: <code class="bg-slate-700 px-1 rounded text-xs">opencode debug skill</code> (muestra las skills cargadas)</li>
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">2.</span> Dentro de OpenCode: preguntale: <em>"¿Qué skills tienes disponibles?"</em> - el agente listará nombres y descripciones</li>
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">3.</span> El agente carga automaticamente una skill cuando detecta que su <code class="bg-slate-700 px-1 rounded text-xs">description</code> coincide con tu tarea</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-lg p-4 text-sm mt-3">
+                            <p class="text-gray-300 mb-2 font-semibold">¿Se instalan por proyecto o globalmente?</p>
+                            <ul class="space-y-1 text-gray-400">
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">📁</span> <strong class="text-white">Global</strong> (<code class="bg-slate-700 px-1 rounded text-xs">~/.config/opencode/skills/</code> en Linux/Mac o <code class="bg-slate-700 px-1 rounded text-xs">C:\Users\elfab\.config\opencode\skills\</code> en Windows): Se instalan UNA VEZ y están en TODOS tus proyectos</li>
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">📂</span> <strong class="text-white">Por proyecto</strong> (<code class="bg-slate-700 px-1 rounded text-xs">.opencode/skills/</code> en la raiz del proyecto): Solo para ese proyecto, se pueden compartir con el equipo via Git</li>
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">⚡</span> <strong class="text-white">Prioridad</strong>: Las skills de proyecto sobrescriben a las globales si tienen el mismo nombre</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 rounded-lg p-4 text-sm mt-3">
+                            <p class="text-gray-300 mb-2 font-semibold">Dónde buscar nuevas skills:</p>
+                            <ul class="space-y-1 text-gray-400">
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">•</span> <code class="bg-slate-700 px-1 rounded text-xs">skills.sh</code> - Directorio de colecciones de skills</li>
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">•</span> <code class="bg-slate-700 px-1 rounded text-xs">openagentskills.dev</code> - Recursos y documentación</li>
+                                <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">•</span> GitHub: busca repositorios con archivos <code class="bg-slate-700 px-1 rounded text-xs">SKILL.md</code> (ej. <code class="bg-slate-700 px-1 rounded text-xs">anthropics/skills</code>)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 text-sm mt-3">
+                            <p class="text-amber-300"><strong>Ejemplo:</strong> Crear <code class="bg-slate-700 px-1 rounded text-xs">.opencode/skills/git-release/SKILL.md</code> con un <code class="bg-slate-700 px-1 rounded text-xs">name</code> y <code class="bg-slate-700 px-1 rounded text-xs">description</code> en el frontmatter. OpenCode lo detectará automaticamente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comandos de Sesiones -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-sm">S</span>
+                    Sesiones (Espacios de trabajo)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/sessions</code>
+                            <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">ctrl+x l</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Lista y permite cambiar entre sesiones. Cada sesion es una conversacion independiente con su propio historial, pero los cambios en archivos se reflejan en todas.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/new</code>
+                            <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">ctrl+x n</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Crea una nueva sesion limpia. Alias: <code class="bg-slate-700 px-1 rounded text-xs">/clear</code>. Ideal para empezar una tarea diferente sin mezclar contexto.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/resume</code>
+                            <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">alias</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Alias de <code class="bg-slate-700 px-1 rounded text-xs">/sessions</code>. Reanuda o cambia a una sesion existente.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/continue</code>
+                            <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">alias</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Otro alias para <code class="bg-slate-700 px-1 rounded text-xs">/sessions</code>. Continua una sesion previa.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comandos de Edicion y Cambios -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center text-green-400 text-sm">E</span>
+                    Edicion y Cambios
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/init</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Guia paso a paso para crear o actualizar <code class="bg-slate-700 px-1 rounded text-xs">AGENTS.md</code>. Analiza tu proyecto y ensena a OpenCode la estructura, convenciones y patrones del codigo.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/undo</code>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">ctrl+x u</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Deshace el ultimo mensaje y cambios en archivos. Puedes ejecutarlo varias veces. Usa Git internamente, asi que tu proyecto debe ser un repositorio Git.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/redo</code>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">ctrl+x r</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Rehace un mensaje que fue deshecho con <code class="bg-slate-700 px-1 rounded text-xs">/undo</code>. Solo disponible despues de usar undo. Los cambios de archivos tambien se restauran.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/compact</code>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">ctrl+x c</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Compacta la sesion actual resumiendo el contexto. Alias: <code class="bg-slate-700 px-1 rounded text-xs">/summarize</code>. Util cuando el historial crece mucho y quieres reducir tokens.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comandos de Visualizacion y Salida -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center text-yellow-400 text-sm">V</span>
+                    Visualizacion y Salida
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/details</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Alterna la visibilidad de los detalles de ejecucion de herramientas (tool execution details). Muestra u oculta informacion tecnica del procesamiento.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/thinking</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Alterna la visibilidad de los bloques de "thinking/reasoning" en la conversacion. Solo afecta la visualizacion, no habilita/deshabilita el razonamiento del modelo. Para cambiar el razonamiento usa <code class="bg-slate-700 px-1 rounded text-xs">ctrl+t</code>.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/export</code>
+                            <span class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded">ctrl+x x</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Exporta la conversacion actual a Markdown y la abre en tu editor predeterminado (configurado en la variable <code class="bg-slate-700 px-1 rounded text-xs">EDITOR</code>).</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/share</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Comparte la sesion actual generando un enlace (link) que se copia al portapapeles. Permite compartir la conversacion con tu equipo. Las sesiones NO se comparten por defecto.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/unshare</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Deja de compartir la sesion actual. Elimina el enlace de compartir previamente creado con <code class="bg-slate-700 px-1 rounded text-xs">/share</code>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comandos de Salida y Ayuda -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center text-red-400 text-sm">?</span>
+                    Ayuda y Salida
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/help</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Muestra el dialogo de ayuda con la lista de comandos y atajos disponibles dentro de OpenCode.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/exit</code>
+                            <span class="text-xs bg-red-500/20 text-red-300 px-2 py-0.5 rounded">ctrl+x q</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Sale de OpenCode. Alias: <code class="bg-slate-700 px-1 rounded text-xs">/quit</code>, <code class="bg-slate-700 px-1 rounded text-xs">/q</code>.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">/editor</code>
+                            <span class="text-xs bg-red-500/20 text-red-300 px-2 py-0.5 rounded">ctrl+x e</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Abre un editor externo para redactar mensajes largos. Usa el editor definido en la variable <code class="bg-slate-700 px-1 rounded text-xs">EDITOR</code> (ej. <code class="bg-slate-700 px-1 rounded text-xs">code --wait</code>, <code class="bg-slate-700 px-1 rounded text-xs">vim</code>, <code class="bg-slate-700 px-1 rounded text-xs">notepad</code>).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comandos Especiales (entrada de texto) -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center text-cyan-400 text-sm">></span>
+                    Entrada Especial (sin /)
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">@archivo</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Referencia archivos en tus mensajes. Usa <code class="bg-slate-700 px-1 rounded text-xs">@</code> para hacer una busqueda difusa (fuzzy search) de archivos en el directorio actual. Ej: <code class="bg-slate-700 px-1 rounded text-xs">@src/auth.js</code>. El contenido se agrega automaticamente a la conversacion.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">!comando</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Ejecuta un comando de terminal (bash). Empieza el mensaje con <code class="bg-slate-700 px-1 rounded text-xs">!</code>. Ej: <code class="bg-slate-700 px-1 rounded text-xs">!ls -la</code>. La salida del comando se agrega a la conversacion como resultado de herramienta.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">@nombre-agente</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Invoca un subagente (subagent) manualmente mencionandolo con <code class="bg-slate-700 px-1 rounded text-xs">@</code>. Ej: <code class="bg-slate-700 px-1 rounded text-xs">@general ayudame a buscar esta funcion</code>. Los subagentes son asistentes especializados.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">Tab</code>
+                        </div>
+                        <p class="text-sm text-gray-400">Alterna entre los agentes principales (primary agents): <strong class="text-blue-300">Modo Plan</strong> (solo analiza, no hace cambios) y <strong class="text-green-300">Modo Build</strong> (hace cambios directos). Tambien puedes ciclar con el atajo <code class="bg-slate-700 px-1 rounded text-xs">switch_agent</code>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agentes Disponibles -->
+            <div class="mb-10">
+                <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center text-orange-400 text-sm">A</span>
+                    Agentes Disponibles
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">build</code>
+                            <span class="text-xs bg-green-500/20 text-green-300 px-2 py-0.5 rounded">primary</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Agente principal por defecto. Tiene todas las herramientas habilitadas. Ideal para desarrollo donde necesitas acceso completo a operaciones de archivos y comandos del sistema.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">plan</code>
+                            <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">primary</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Agente restringido para planificacion y analisis. Por defecto, toda edicion de archivos y comandos bash requieren aprobacion (<code class="bg-slate-700 px-1 rounded text-xs">ask</code>). No hace cambios directos, solo sugiere.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">general</code>
+                            <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">subagent</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Agente general para investigar preguntas complejas y ejecutar tareas de multiples pasos. Tiene acceso completo a herramientas (excepto todo). Invocalo con <code class="bg-slate-700 px-1 rounded text-xs">@general</code>.</p>
+                    </div>
+                    <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5">
+                        <div class="flex items-center gap-2 mb-2">
+                            <code class="font-mono text-green-400 text-sm">explore</code>
+                            <span class="text-xs bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">subagent</span>
+                        </div>
+                        <p class="text-sm text-gray-400">Agente rapido de solo lectura para explorar bases de codigo. No puede modificar archivos. Ideal para buscar archivos por patrones, buscar codigo o responder preguntas sobre el proyecto.</p>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-4">Tambien hay agentes del sistema ocultos: <code class="bg-slate-700 px-1 rounded text-xs">compaction</code> (compacta contexto), <code class="bg-slate-700 px-1 rounded text-xs">title</code> (genera titulos), <code class="bg-slate-700 px-1 rounded text-xs">summary</code> (crea resumenes).</p>
+            </div>
+
+            <!-- Crear Comandos Personalizados -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-3">Comandos Personalizados</h3>
+                <p class="text-sm text-gray-400 mb-4">Puedes crear tus propios comandos guardando archivos Markdown en <code class="bg-slate-700 px-2 py-0.5 rounded text-xs">.opencode/commands/</code> (proyecto) o <code class="bg-slate-700 px-2 py-0.5 rounded text-xs">~/.config/opencode/commands/</code> (global). El nombre del archivo se convierte en el comando.</p>
+                <div class="code-block p-4 text-sm text-green-400 overflow-x-auto">
+                    <p class="text-gray-500 mb-1"># Ejemplo: crear .opencode/commands/test.md</p>
+                    <p>---</p>
+                    <p>description: Ejecutar tests con cobertura</p>
+                    <p>agent: build</p>
+                    <p>---</p>
+                    <p>Ejecuta la suite completa de tests con reporte de cobertura.</p>
+                    <p class="text-gray-500 mt-3 mb-1"># Luego usa el comando:</p>
+                    <p>/test</p>
+                    <p class="text-gray-500 mt-3 mb-1"># Con argumentos:</p>
+                    <p class="text-gray-500 mb-1"># En el archivo usa $ARGUMENTS, $1, $2, etc.</p>
+                    <p>/component Button</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Explicacion detallada de limites -->
+    <section class="container mx-auto px-6 py-16">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-4 text-white">Limites del Plan Gratuito - Explicado</h2>
+            <p class="text-gray-400 text-center mb-12">Entendiendo los limites de peticiones y tiempo de forma clara.</p>
+
+            <!-- Que son los limites -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 mb-8">
+                <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-brand-500/20 rounded-lg flex items-center justify-center text-brand-400 text-sm font-bold">?</span>
+                    Que significan los "limites de peticiones por tiempo"?
+                </h3>
+                <p class="text-gray-300 mb-4">
+                    OpenCode Go (el servicio de modelos de OpenCode) funciona con un sistema de <strong class="text-brand-300">ventanas de tiempo</strong>. Cada modelo tiene un <strong class="text-white">maximo de peticiones</strong> que puedes hacer dentro de una ventana de <strong class="text-white">5 horas</strong>.
+                </p>
+
+                <div class="bg-slate-900/50 rounded-xl p-5 border border-slate-700">
+                    <h4 class="font-semibold text-white mb-3">Como funciona en la practica:</h4>
+                    <div class="space-y-3 text-sm text-gray-300">
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-brand-500/20 rounded-full flex items-center justify-center text-brand-400 text-xs flex-shrink-0 mt-0.5">1</span>
+                            <p>Cada vez que le envias un mensaje a OpenCode, eso cuenta como <strong class="text-white">1 peticion</strong>.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-brand-500/20 rounded-full flex items-center justify-center text-brand-400 text-xs flex-shrink-0 mt-0.5">2</span>
+                            <p>El contador empieza de cero y se acumula durante <strong class="text-white">5 horas</strong>.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-brand-500/20 rounded-full flex items-center justify-center text-brand-400 text-xs flex-shrink-0 mt-0.5">3</span>
+                            <p>Cuando pasan las 5 horas, el contador <strong class="text-white">se reinicia</strong> automaticamente y puedes volver a usar tus peticiones.</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-6 h-6 bg-brand-500/20 rounded-full flex items-center justify-center text-brand-400 text-xs flex-shrink-0 mt-0.5">4</span>
+                            <p>Si llegas al limite antes de que pasen las 5 horas, tendras que <strong class="text-white">esperar a que se reinicie</strong> o cambiar a otro modelo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo visual -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 mb-8">
+                <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-400 text-sm font-bold">!</span>
+                    Ejemplo practico
+                </h3>
+
+                <div class="bg-slate-900/50 rounded-xl p-5 border border-slate-700 mb-4">
+                    <p class="text-sm text-gray-300 mb-4">Imagina que el modelo <strong class="text-brand-300">Big Pickle</strong> (uno de los modelos gratuitos) tiene un limite de <strong class="text-white">200 peticiones cada 5 horas</strong>:</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                            <p class="text-green-400 font-semibold text-sm mb-2">10:00 AM - Empiezas a usar OpenCode</p>
+                            <p class="text-sm text-gray-400">Contador: 0 / 200</p>
+                            <p class="text-sm text-gray-400">Tu ventana se reinicia a las: <strong class="text-white">3:00 PM</strong></p>
+                        </div>
+                        <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+                            <p class="text-yellow-400 font-semibold text-sm mb-2">12:00 PM - Llevas 150 peticiones</p>
+                            <p class="text-sm text-gray-400">Contador: 150 / 200</p>
+                            <p class="text-sm text-gray-400">Te quedan 50 peticiones hasta las 3:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                        <p class="text-red-400 font-semibold text-sm mb-2">1:30 PM - Llegaste al limite!</p>
+                        <p class="text-sm text-gray-400">Contador: 200 / 200 - <strong class="text-red-400">Limite alcanzado</strong></p>
+                        <p class="text-sm text-gray-400 mt-1">No puedes enviar mas mensajes con este modelo hasta las <strong class="text-white">3:00 PM</strong>. Puedes: esperar, o cambiar a otro modelo con limite disponible.</p>
+                    </div>
+
+                    <div class="mt-4 bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                        <p class="text-green-400 font-semibold text-sm mb-2">3:00 PM - La ventana se reinicio</p>
+                        <p class="text-sm text-gray-400">Contador: 0 / 200 - <strong class="text-green-400">Listo de nuevo!</strong></p>
+                        <p class="text-sm text-gray-400 mt-1">Tu nueva ventana termina a las <strong class="text-white">8:00 PM</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Limites por modelo -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 mb-8">
+                <h3 class="text-xl font-semibold text-white mb-4">Limites por modelo (cada 5 horas)</h3>
+                <p class="text-sm text-gray-400 mb-4">Estos son los limites aproximados de peticiones que tiene cada modelo gratuito en el plan Go:</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-600">
+                                <th class="text-left py-3 px-4 text-brand-300">Modelo</th>
+                                <th class="text-center py-3 px-4 text-brand-300">Peticiones / 5h</th>
+                                <th class="text-left py-3 px-4 text-brand-300">Nivel</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-400">
+                            <tr class="border-b border-slate-800">
+                                <td class="py-3 px-4 font-mono text-white">Big Pickle</td>
+                                <td class="py-3 px-4 text-center font-semibold text-yellow-400">200</td>
+                                <td class="py-3 px-4"><span class="bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full text-xs">Basico</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-3 px-4 font-mono text-white">GLM-5.1</td>
+                                <td class="py-3 px-4 text-center font-semibold text-green-400">880</td>
+                                <td class="py-3 px-4"><span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full text-xs">Generoso</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-3 px-4 font-mono text-white">Kimi K2.6 (3x uso)</td>
+                                <td class="py-3 px-4 text-center font-semibold text-green-400">3,450</td>
+                                <td class="py-3 px-4"><span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full text-xs">Alto</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-3 px-4 font-mono text-white">MiMo-V2.5-Pro</td>
+                                <td class="py-3 px-4 text-center font-semibold text-green-400">1,290</td>
+                                <td class="py-3 px-4"><span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full text-xs">Generoso</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-3 px-4 font-mono text-white">Qwen3.6 Plus</td>
+                                <td class="py-3 px-4 text-center font-semibold text-green-400">3,300</td>
+                                <td class="py-3 px-4"><span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full text-xs">Alto</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-3 px-4 font-mono text-white">MiniMax M2.7</td>
+                                <td class="py-3 px-4 text-center font-semibold text-green-400">3,400</td>
+                                <td class="py-3 px-4"><span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full text-xs">Alto</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-800">
+                                <td class="py-3 px-4 font-mono text-white">DeepSeek V4 Pro</td>
+                                <td class="py-3 px-4 text-center font-semibold text-green-400">3,450</td>
+                                <td class="py-3 px-4"><span class="bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full text-xs">Alto</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-mono text-white">DeepSeek V4 Flash</td>
+                                <td class="py-3 px-4 text-center font-semibold text-emerald-400">31,650</td>
+                                <td class="py-3 px-4"><span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full text-xs">Muy alto</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">Los limites pueden variar. Consulta <a href="https://opencode.ai/go" target="_blank" class="text-brand-400 hover:underline">opencode.ai/go</a> para limites actualizados.</p>
+            </div>
+
+            <!-- Tips para no quedarse sin peticiones -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                    <span class="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 text-sm font-bold">$</span>
+                    Tips para optimizar tus peticiones
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-2 text-sm text-gray-300">
+                            <span class="text-brand-400 mt-0.5">&#10148;</span>
+                            <span><strong class="text-white">Sere conciso:</strong> Agrupa varias preguntas en un solo mensaje en vez de enviar muchos mensajes pequenos.</span>
+                        </div>
+                        <div class="flex items-start gap-2 text-sm text-gray-300">
+                            <span class="text-brand-400 mt-0.5">&#10148;</span>
+                            <span><strong class="text-white">Usa el modo Plan:</strong> Para tareas complejas, planifica primero (no gasta recursos en cambios innecesarios).</span>
+                        </div>
+                        <div class="flex items-start gap-2 text-sm text-gray-300">
+                            <span class="text-brand-400 mt-0.5">&#10148;</span>
+                            <span><strong class="text-white">Cambia de modelo:</strong> Si te quedaste sin peticiones en un modelo, cambia a otro que tenga limite disponible.</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-2 text-sm text-gray-300">
+                            <span class="text-brand-400 mt-0.5">&#10148;</span>
+                            <span><strong class="text-white">Da contexto completo:</strong> Un mensaje detallado evita tener que pedir aclaraciones despues (que gastan mas peticiones).</span>
+                        </div>
+                        <div class="flex items-start gap-2 text-sm text-gray-300">
+                            <span class="text-brand-400 mt-0.5">&#10148;</span>
+                            <span><strong class="text-white">DeepSeek V4 Flash:</strong> Tiene 31,650 peticiones/5h. Es ideal para uso intensivo diario.</span>
+                        </div>
+                        <div class="flex items-start gap-2 text-sm text-gray-300">
+                            <span class="text-brand-400 mt-0.5">&#10148;</span>
+                            <span><strong class="text-white">Plan Go ($5/mes):</strong> Si necesitas mas, el plan Go aumenta significativamente todos los limites.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Habilidades Section -->
+    <section class="container mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center mb-4 text-white">Habilidades y Tareas</h2>
+        <p class="text-gray-400 text-center mb-12 max-w-xl mx-auto">Todo lo que puedo hacer por ti en tu flujo de desarrollo diario.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+
+            <!-- Gestion de Archivos -->
+            <div class="card-hover bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Gestion de Archivos</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Leer archivos y directorios completos</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Crear archivos nuevos desde cero</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Editar contenido existente con precision</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Buscar archivos por patrones (glob)</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Reemplazar texto en multiples archivos</li>
+                </ul>
+            </div>
+
+            <!-- Busqueda y Analisis -->
+            <div class="card-hover bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Busqueda y Analisis</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Buscar contenido con expresiones regulares</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Analizar estructura del codigo base</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Identificar patrones y convenciones</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Mapear dependencias entre archivos</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Explicar codigo existente</li>
+                </ul>
+            </div>
+
+            <!-- Terminal y Automatizacion -->
+            <div class="card-hover bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Terminal y Automatizacion</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Ejecutar comandos de terminal</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Instalar dependencias (npm, pip, etc.)</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Ejecutar tests y linters</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Operaciones con Git (status, diff, log)</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Crear y gestionar pull requests</li>
+                </ul>
+            </div>
+
+            <!-- Desarrollo Web -->
+            <div class="card-hover bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <div class="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Desarrollo Web</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Crear paginas HTML con Tailwind CSS</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Desarrollo con Next.js y React</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Crear componentes reutilizables</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Integracion de APIs y endpoints</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Responsive design y accesibilidad</li>
+                </ul>
+            </div>
+
+            <!-- Web y Datos -->
+            <div class="card-hover bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <div class="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Web y Datos</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Buscar informacion en la web en tiempo real</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Obtener y analizar contenido de URLs</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Consultar documentacion tecnica online</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Investigar tendencias y noticias actuales</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Extraer datos de paginas web</li>
+                </ul>
+            </div>
+
+            <!-- Debugging y Testing -->
+            <div class="card-hover bg-slate-800/50 border border-slate-700 rounded-2xl p-6">
+                <div class="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Debugging y Testing</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Identificar y corregir bugs</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Escribir tests unitarios y de integracion</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Refactorizar codigo existente</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Optimizar rendimiento</li>
+                    <li class="flex items-start gap-2"><span class="text-brand-400 mt-0.5">-></span> Revisar y seguir convenciones del proyecto</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Plan Go Section -->
+    <section class="container mx-auto px-6 py-16">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gradient-to-br from-brand-900/60 to-slate-800/60 border border-brand-600 rounded-3xl p-8 md:p-12">
+                <div class="text-center mb-8">
+                    <span class="inline-block bg-brand-500 text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-4">Plan Premium</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">OpenCode Go</h2>
+                    <p class="text-gray-400">$5 primer mes, luego $10/mes - Modelos open source de alta calidad</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold text-brand-300 mb-4">Que incluye Go?</h3>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-400 mt-0.5">+</span>
+                                <span>Modelos incluidos: GLM-5.1, GLM-5, Kimi K2.5, Kimi K2.6, MiMo-V2-Pro, MiMo-V2.5-Pro, Qwen3.5 Plus, Qwen3.6 Plus, MiniMax M2.5, MiniMax M2.7, DeepSeek V4 Pro, DeepSeek V4 Flash</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-400 mt-0.5">+</span>
+                                <span>Limites mucho mas generosos que el plan gratuito</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-400 mt-0.5">+</span>
+                                <span>Acceso confiable y sin interrupciones a los modelos</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-400 mt-0.5">+</span>
+                                <span>Puedes agregar credito adicional si lo necesitas (top up)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-400 mt-0.5">+</span>
+                                <span>Cancela cuando quieras, sin compromisos</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-brand-400 mt-0.5">+</span>
+                                <span>Funciona con OpenCode y otros agentes de codigo</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <div class="bg-slate-900/50 rounded-2xl p-6 border border-slate-700">
+                            <h4 class="text-white font-semibold mb-2">Diferencia: Free vs Go</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="grid grid-cols-3 gap-2 text-gray-500 text-xs uppercase tracking-wider border-b border-slate-700 pb-2">
+                                    <span></span>
+                                    <span class="text-center">Gratis</span>
+                                    <span class="text-center text-brand-400">Go</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-gray-400">
+                                    <span>Big Pickle</span>
+                                    <span class="text-center">200 req</span>
+                                    <span class="text-center text-brand-400">200 req</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-gray-400">
+                                    <span>GLM-5.1</span>
+                                    <span class="text-center text-gray-600">-</span>
+                                    <span class="text-center text-brand-400">880 req</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-gray-400">
+                                    <span>Kimi K2.6</span>
+                                    <span class="text-center text-gray-600">-</span>
+                                    <span class="text-center text-brand-400">3,450 req</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-gray-400">
+                                    <span>DeepSeek V4 Flash</span>
+                                    <span class="text-center text-gray-600">-</span>
+                                    <span class="text-center text-brand-400">31,650 req</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-gray-400">
+                                    <span>Modelos disponibles</span>
+                                    <span class="text-center">1</span>
+                                    <span class="text-center text-brand-400">12+</span>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-3">req = peticiones cada 5 horas</p>
+                            <a href="https://opencode.ai/go" target="_blank" class="mt-4 block w-full text-center bg-brand-500 hover:bg-brand-400 text-white font-semibold py-3 px-6 rounded-xl transition-colors">
+                                Suscribirse a Go ->
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="container mx-auto px-6 py-12 border-t border-slate-800">
+        <div class="text-center">
+            <p class="text-gray-500 text-sm mb-2">
+                OpenCode es un agente de codigo AI open source con 140K+ estrellas en GitHub
+            </p>
+            <div class="flex justify-center gap-6 text-sm">
+                <a href="https://github.com/anomalyco/opencode" target="_blank" class="text-gray-400 hover:text-brand-400 transition-colors">GitHub</a>
+                <a href="https://opencode.ai/docs" target="_blank" class="text-gray-400 hover:text-brand-400 transition-colors">Docs</a>
+                <a href="https://opencode.ai/discord" target="_blank" class="text-gray-400 hover:text-brand-400 transition-colors">Discord</a>
+                <a href="https://opencode.ai/go" target="_blank" class="text-gray-400 hover:text-brand-400 transition-colors">Go</a>
+            </div>
+            <p class="text-gray-600 text-xs mt-6">Generado con OpenCode - 2026</p>
+        </div>
+    </footer>
+
+</body>
+</html>
